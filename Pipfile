@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cohere = "*"
+sqlalchemy = "*"
+click = "*"
+fastapi = "*"
+h11 = "*"
+httptools = "*"
+Jinja2 = "*"
+MarkupSafe = "*"
+pydantic = "*"
+python-dotenv = "*"
+PyYAML = "*"
+starlette = "*"
+uvicorn = "*"
+watchgod = "*"
+websockets = "*"
+certifi = "*"
+pandas = "*"
+annoy = "*"
+
+[dev-packages]
+autopep8 = "*"
+
+[requires]
+python_version = "3.10"

@@ -1,0 +1,5 @@
+Pipfile.lock
+__pycache__
+test.ann
+cohere_demo/
+get-pip.py
