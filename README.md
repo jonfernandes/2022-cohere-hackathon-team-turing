@@ -1,4 +1,4 @@
-# 2022-COHERE-HACKATHON-TEAM-TURING
+# Traditional Customer Service Web Chat is Dead: Here's why Cohere LLM matters.
 ## Instructions
 ### Prerequisites
 - See requirements.txt file
