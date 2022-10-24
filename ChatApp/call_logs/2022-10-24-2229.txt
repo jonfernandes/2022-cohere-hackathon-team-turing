@@ -1,0 +1,17 @@
+Support call worker ID: 
+Customer ID:
+Call sentiment: 
+[cohere.Classification {
+	input: it is boring
+	prediction: negative
+	confidence: 0.5805003
+	labels: {'negative': cohere.LabelPrediction {
+	confidence: 0.5805003
+}, 'neutral': cohere.LabelPrediction {
+	confidence: 0.1538613
+}, 'positive': cohere.LabelPrediction {
+	confidence: 0.26563838
+}}
+}]
+Confidence:
+Customer chat log: it is boring

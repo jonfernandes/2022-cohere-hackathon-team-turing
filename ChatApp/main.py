@@ -1,4 +1,5 @@
 import json
+import datetime
 from re import M
 from fastapi import (
     FastAPI, WebSocket, WebSocketDisconnect, Request, Response
@@ -17,6 +18,11 @@ BASE_DIR = Path(__file__).resolve().parent
 customer_support_chat = []
 customer_chat = []
 
+def create_logs(text):
+    output_filename = f'{datetime.datetime.today():%Y-%m-%d-%H%M}.txt'
+    chat = '\n'.join(customer_chat)
+    with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
+        file.write(f'Support call worker ID: \nCustomer ID:\nCall sentiment: \n{str(text)}\nConfidence:\nCustomer chat log: \n{chat}\n')
 
 app = FastAPI()
 
@@ -137,6 +143,6 @@ async def chat(websocket: WebSocket, sender):
         except WebSocketDisconnect:
             manager.disconnect(websocket, sender)
             response['message'] = "left"
-            print(f'customer_support_chat->{customer_support_chat}')
-            print(f'customer_chat->{customer_chat}')
+            outp = ai_manager.sentiment_analysis('. '.join(customer_chat))
+            create_logs(outp)
             await manager.broadcast(response)
