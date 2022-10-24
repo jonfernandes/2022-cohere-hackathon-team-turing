@@ -14,6 +14,10 @@ from .ai_manager import AIManager
 
 BASE_DIR = Path(__file__).resolve().parent
 
+customer_support_chat = []
+customer_chat = []
+
+
 app = FastAPI()
 
 app.mount(
@@ -103,6 +107,7 @@ async def handleCustomerSupportBot(data):
 
 @app.websocket("/api/chat/{sender}")
 async def chat(websocket: WebSocket, sender):
+
     if sender:
         await manager.connect(websocket, sender)
         response = {
@@ -114,6 +119,11 @@ async def chat(websocket: WebSocket, sender):
             while True:
                 data = await websocket.receive_json()
 
+                if data["sender"] == 'Customer Support':
+                    customer_support_chat.append(data["message"])
+                else:
+                    customer_chat.append(data["message"])
+                
                 match sender:
                     case "Customer Support":
                         await handleCustomerSupport(data)
@@ -127,4 +137,6 @@ async def chat(websocket: WebSocket, sender):
         except WebSocketDisconnect:
             manager.disconnect(websocket, sender)
             response['message'] = "left"
+            print(f'customer_support_chat->{customer_support_chat}')
+            print(f'customer_chat->{customer_chat}')
             await manager.broadcast(response)
