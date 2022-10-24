@@ -1,4 +1,4 @@
-# Traditional Customer Service Web Chat is Dead: Here's why Cohere LLM matters.
+# Traditional Customer Service Web Chat is Dead: Here's why Cohere's LLM matters.
 ## Instructions
 ### Prerequisites
 - See requirements.txt file
