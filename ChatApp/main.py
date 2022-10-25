@@ -8,7 +8,7 @@ from typing import List
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-
+import itertools
 from pathlib import Path
 
 from .ai_manager import AIManager
@@ -20,9 +20,13 @@ customer_chat = []
 
 def create_logs(text):
     output_filename = f'{datetime.datetime.today():%Y-%m-%d-%H%M}.txt'
-    chat = '\n'.join(customer_chat)
+    conversation = zip(customer_chat, customer_support_chat) 
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
-        file.write(f'Support call worker ID: \nCustomer ID:\nCall sentiment: \n{str(text)}\nConfidence:\nCustomer chat log: \n{chat}\n')
+        file.write(f'Support call worker ID: \nCustomer ID:\nCall sentiment: \n{str(text)}\nConfidence:\nCustomer chat log: \n')
+        for line in conversation:
+            first, second = line
+            file.write(first + '\n')
+            file.write(second + '\n')
 
 app = FastAPI()
 
