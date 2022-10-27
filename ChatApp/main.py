@@ -12,6 +12,7 @@ import itertools
 from pathlib import Path
 
 from .ai_manager import AIManager
+from .ai_manager import API_KEY
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -36,8 +37,8 @@ app.mount(
 # locate templates
 templates = Jinja2Templates(directory=str(Path(BASE_DIR, 'templates')))
 
-ai_manager = AIManager('04phuWRJP2o2r7NApFvq5BBbNZahzNwQrDSNXhuR')  # add API key in the quotation marks
-
+#ai_manager = AIManager('04phuWRJP2o2r7NApFvq5BBbNZahzNwQrDSNXhuR')  # add API key in the quotation marks
+ai_manager = AIManager(API_KEY)
 
 @app.get("/")
 def get_home(request: Request):

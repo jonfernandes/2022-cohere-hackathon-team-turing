@@ -3,3 +3,4 @@ __pycache__
 test.ann
 cohere_demo/
 get-pip.py
+COHERE_API_KEY.json

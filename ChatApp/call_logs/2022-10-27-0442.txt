@@ -1,0 +1,24 @@
+Support call worker ID: 
+Customer ID:
+Call sentiment: 
+[cohere.Classification {
+	input: this doesn't work. strange - no problem with the API key.. so can you help?
+	prediction: negative
+	confidence: 0.7751704
+	labels: {'negative': cohere.LabelPrediction {
+	confidence: 0.7751704
+}, 'neutral': cohere.LabelPrediction {
+	confidence: 0.2075658
+}, 'positive': cohere.LabelPrediction {
+	confidence: 0.017263813
+}}
+}]
+Confidence:
+Customer chat log: 
+this doesn't work
+what doesn't work?
+
+strange - no problem with the API key.
+I see.
+so can you help?
+I'm sorry, can you repeat that?

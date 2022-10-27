@@ -6,6 +6,11 @@ from annoy import AnnoyIndex
 import numpy as np
 import datetime
 from pathlib import Path
+import json
+
+with open(f'{str(Path.cwd())}/ChatApp/COHERE_API_KEY.json', 'rt') as file:
+    content = json.load(file)
+API_KEY = content['API_KEY']
 
 class AIManager:
     def __init__(self, API_KEY):
@@ -151,7 +156,6 @@ Agent:"""
 
 
 if __name__ == "__main__":
-    API_KEY = 'bULA1eGPpCKwDioqSK49DrepiSSHuvRQ8gTwKjAs'
     aiManager = AIManager(API_KEY)
     msg = 'What is the height at the back in cm for the Halls Standard Cold Frame'
     response = aiManager.answer_message(msg)

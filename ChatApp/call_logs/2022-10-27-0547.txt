@@ -1,0 +1,21 @@
+Support call worker ID: 
+Customer ID:
+Call sentiment: 
+[cohere.Classification {
+	input: this works again?. PTL
+	prediction: negative
+	confidence: 0.71845496
+	labels: {'negative': cohere.LabelPrediction {
+	confidence: 0.71845496
+}, 'neutral': cohere.LabelPrediction {
+	confidence: 0.07519477
+}, 'positive': cohere.LabelPrediction {
+	confidence: 0.20635028
+}}
+}]
+Confidence:
+Customer chat log: 
+this works again?
+Yes, it does.
+PTL
+Thank you, I'll be right with you.
