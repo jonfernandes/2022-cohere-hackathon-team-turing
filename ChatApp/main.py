@@ -31,7 +31,7 @@ def create_logs(text):
         file.write(f'### Call sentiment: \n{str(text)}\n')
         file.write(f'### Confidence:\n')
         file.write(f'### Customer chat log: \n')
-        file.write(f'---')
+        file.write(f'---\n')
         file.write(f'## Details\n')
         for line in call_log:
             line = line + '<br>'
