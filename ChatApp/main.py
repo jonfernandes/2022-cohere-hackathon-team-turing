@@ -20,10 +20,16 @@ customer_support_chat = []
 customer_chat = []
 
 def create_logs(text):
-    output_filename = f'{datetime.datetime.today():%Y-%m-%d-%H%M}.txt'
+    chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
+    output_filename = f'{chat_time}.md'
     conversation = zip(customer_chat, customer_support_chat) 
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
-        file.write(f'Support call worker ID: \nCustomer ID:\nCall sentiment: \n{str(text)}\nConfidence:\nCustomer chat log: \n')
+        file.write(f'# Chat log ({chat_time})\n')
+        file.write(f'### Support call worker ID: \n')
+        file.write(f'### Customer ID:\n')
+        file.write(f'### Call sentiment: \n{str(text)}\n')
+        file.write(f'### Confidence:\n')
+        file.write(f'### Customer chat log: \n')
         for line in conversation:
             first, second = line
             file.write(first + '\n')
