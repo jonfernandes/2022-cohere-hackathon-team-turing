@@ -18,11 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent
 
 customer_support_chat = []
 customer_chat = []
+call_log = []
 
 def create_logs(text):
     chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
-    output_filename = f'{chat_time}.md'
-    conversation = zip(customer_chat, customer_support_chat) 
+    output_filename = f'{datetime.datetime.today():%Y-%m-%d %H%M}.md'
+    #conversation = zip(customer_chat, customer_support_chat) 
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
         file.write(f'# Chat log ({chat_time})\n')
         file.write(f'### Support call worker ID: \n')
@@ -30,10 +31,11 @@ def create_logs(text):
         file.write(f'### Call sentiment: \n{str(text)}\n')
         file.write(f'### Confidence:\n')
         file.write(f'### Customer chat log: \n')
-        for line in conversation:
-            first, second = line
-            file.write(first + '\n')
-            file.write(second + '\n')
+        file.write(f'---')
+        file.write(f'## Details\n')
+        for line in call_log:
+            line = line + '<br>'
+            file.write(line)
 
 app = FastAPI()
 
@@ -138,9 +140,10 @@ async def chat(websocket: WebSocket, sender):
 
                 if data["sender"] == 'Customer Support':
                     customer_support_chat.append(data["message"])
+                    call_log.append(f'**Customer Support:** {data["message"]}')
                 else:
                     customer_chat.append(data["message"])
-                
+                    call_log.append(f'**Customer:** {data["message"]}')                
                 match sender:
                     case "Customer Support":
                         await handleCustomerSupport(data)
