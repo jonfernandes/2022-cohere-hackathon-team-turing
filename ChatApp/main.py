@@ -28,16 +28,16 @@ def create_logs(outp):
     negative_confidence = round(outp[0].labels['negative'].confidence, 2)
     neutral_confidence = round(outp[0].labels['neutral'].confidence, 2)
     prediction = outp[0].prediction
-    prediction_confidence = rount(outp[0].confidence, 2)
+    prediction_confidence = round(outp[0].confidence, 2)
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
         file.write(f'# Chat log ({chat_time})\n')
         file.write(f'### Support call worker ID: Jack Daws\n')
         file.write(f'### Customer ID:\n')
-        file.write(f"### Call sentiment: {prediction}({prediction_confidence}) [positive({positive_confidence}), negative({negative_confidence}), neutral({neutral_confidence})\n")
-        file.write(f'### Confidence:\n')
-        file.write(f'### Customer chat log: \n')
+        file.write(f"### Call sentiment: {prediction}({prediction_confidence})\n")
+        file.write(f'### Sentiment overview: [positive({positive_confidence}), negative({negative_confidence}), neutral({neutral_confidence})]\n')
         file.write(f'---\n')
-        file.write(f'## Details\n')
+        file.write(f'## Verbose\n')
+        file.write(f'### Customer chat log: \n')
         for line in call_log:
             line = line + '<br>'
             file.write(line)
