@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import itertools
 from pathlib import Path
+import time
 
 from .ai_manager import AIManager
 from .ai_manager import API_KEY
@@ -20,10 +21,13 @@ customer_support_chat = []
 customer_chat = []
 call_log = []
 customer_support_user = 'Jack Daws'
+start_time = 0
+stop_time = 0
 
-def create_logs(outp):
+def create_logs(outp, call_duration):
     chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
     output_filename = f'{datetime.datetime.today():%Y-%m-%d %H%M}.md'
+    minutes, seconds = divmod(call_duration, 60)
     positive_confidence = round(outp[0].labels['positive'].confidence, 2)
     negative_confidence = round(outp[0].labels['negative'].confidence, 2)
     neutral_confidence = round(outp[0].labels['neutral'].confidence, 2)
@@ -32,11 +36,11 @@ def create_logs(outp):
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
         file.write(f'# Chat log ({chat_time})\n')
         file.write(f'### Support call worker ID: Jack Daws\n')
-        file.write(f'### Customer ID:\n')
-        file.write(f"### Call sentiment: {prediction}({prediction_confidence})\n")
+        file.write(f'### Customer ID: 1542\n')
+        file.write(f'### Chat duration: {round(minutes)}m:{round(seconds)}s\n')
+        file.write(f"### Chat sentiment: {prediction}({prediction_confidence})\n")
         file.write(f'### Sentiment overview: [positive({positive_confidence}), negative({negative_confidence}), neutral({neutral_confidence})]\n')
         file.write(f'---\n')
-        file.write(f'## Verbose\n')
         file.write(f'### Customer chat log: \n')
         for line in call_log:
             line = line + '<br>'
@@ -134,6 +138,8 @@ async def chat(websocket: WebSocket, sender):
 
     if sender:
         await manager.connect(websocket, sender)
+        #global start_time
+        start_time = time.perf_counter()
         response = {
             "sender": sender,
             "message": "got connected"
@@ -162,6 +168,9 @@ async def chat(websocket: WebSocket, sender):
         except WebSocketDisconnect:
             manager.disconnect(websocket, sender)
             response['message'] = "left"
+            #global stop_time
+            stop_time = time.perf_counter()
+            call_duration = stop_time - start_time
             outp = ai_manager.sentiment_analysis('. '.join(customer_chat))
-            create_logs(outp)
+            create_logs(outp, call_duration)
             await manager.broadcast(response)
