@@ -24,6 +24,10 @@ customer_support_user = 'Jack Daws'
 start_time = 0
 stop_time = 0
 
+def format_chat_log(chat_log):
+    summary_chat = '\n'.join(chat_log)
+    return summary_chat
+
 def create_logs(outp, call_duration):
     chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
     output_filename = f'{datetime.datetime.today():%Y-%m-%d %H%M}.md'
@@ -33,6 +37,7 @@ def create_logs(outp, call_duration):
     neutral_confidence = round(outp[0].labels['neutral'].confidence, 2)
     prediction = outp[0].prediction
     prediction_confidence = round(outp[0].confidence, 2)
+    chat_summary = ai_manager.generate_summary(format_chat_log(call_log))
     with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
         file.write(f'# Chat log ({chat_time})\n')
         file.write(f'### Support call worker ID: Jack Daws\n')
@@ -40,6 +45,7 @@ def create_logs(outp, call_duration):
         file.write(f'### Chat duration: {round(minutes)}m:{round(seconds)}s\n')
         file.write(f"### Chat sentiment: {prediction}({prediction_confidence})\n")
         file.write(f'### Sentiment overview: [positive({positive_confidence}), negative({negative_confidence}), neutral({neutral_confidence})]\n')
+        file.write(f'### Chat summary: {chat_summary}\n')
         file.write(f'---\n')
         file.write(f'### Customer chat log: \n')
         for line in call_log:
@@ -151,10 +157,10 @@ async def chat(websocket: WebSocket, sender):
 
                 if data["sender"] == 'Customer Support':
                     customer_support_chat.append(data["message"])
-                    call_log.append(f'**Customer Support:** {data["message"]}')
+                    call_log.append(f'Customer Support: {data["message"]}')
                 else:
                     customer_chat.append(data["message"])
-                    call_log.append(f'**Customer:** {data["message"]}')                
+                    call_log.append(f'Customer: {data["message"]}')                
                 match sender:
                     case "Customer Support":
                         await handleCustomerSupport(data)

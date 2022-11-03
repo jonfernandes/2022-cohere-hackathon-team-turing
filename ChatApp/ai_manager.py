@@ -20,7 +20,22 @@ class AIManager:
         self.create_products()
         self.generate_kb()
 
- 
+    def generate_summary(self, chat_log):
+        prompt='Summarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. what can i help you with today?\nCustomer: What is the height at the back in cm for the Rowlinson Timber Cold Frame?\nCustomer Support: 38cm\nCustomer: What is the width in cm for the Rowlinson Timber Cold Frame?\nCustomer Support: 102cm\nCustomer: Thanks.\nTLDR: A customer wants the dimensions of a Rowlinson Timber Cold Frame\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I assist you today?\nCustomer: The lid for the Halls Standard Cold Frame is very weak. What is it made of?\nCustomer Support: Polycarbonate.\nCustomer: It will only last a few months. How do I return it and get a refund, please?\nTLDR: The customer wants to return an item and get a refund as they think the material it is made of is very weak.\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I help you today?\nCustomer: What wood is the Rowlinson cold frame made out of?\nCustomer Support: Softwood.\nCustomer: That\'s too flimsy and won\'t last. I want to return it and get a refund. How do I do that?\nTLDR: A customer wants to return an item as they are not happy with the material it is made of.\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I help you today?\nCustomer: What is the height at the back of the Halls Standard Cold Frame in inches?\nCustomer Support: 28cm\nCustomer: That\'s too short. I want to return it and get a refund. How do I do that?\nTLDR: A customer wants to return an item as it is too short for their needs.\n--\nSummarize this dialogue:\n'
+        chat_log = chat_log + '\nTLDR:'
+        prompt += chat_log
+        response = self.co.generate(
+          model='xlarge',
+          prompt=prompt,
+          max_tokens=20,
+          temperature=0.6,
+          k=0,
+          p=1,
+          frequency_penalty=0,
+          presence_penalty=0,
+          stop_sequences=["--"],
+          return_likelihoods='NONE')
+        return response.generations[0].text
 
     def generate_kb(self):
         self.kb = pd.DataFrame({'question': []})
@@ -65,7 +80,6 @@ class AIManager:
                         model='medium',
                         inputs=inputs,
                         examples=examples)
-        print(response.classifications)
         return response.classifications
         '''
         output_filename = f'{datetime.datetime.today():%Y-%m-%d-%H%M}.txt'
