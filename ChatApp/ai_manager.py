@@ -7,6 +7,8 @@ import numpy as np
 import datetime
 from pathlib import Path
 import json
+from conversant.prompt_chatbot import PromptChatbot
+import time
 
 with open(f'{str(Path.cwd())}/ChatApp/COHERE_API_KEY.json', 'rt') as file:
     content = json.load(file)
@@ -19,6 +21,7 @@ class AIManager:
         self.co = cohere.Client(API_KEY)
         self.create_products()
         self.generate_kb()
+        self.bot = PromptChatbot.from_persona("customer_support_bot", self.co, '.')
 
     def generate_summary(self, chat_log):
         prompt='Summarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. what can i help you with today?\nCustomer: What is the height at the back in cm for the Rowlinson Timber Cold Frame?\nCustomer Support: 38cm\nCustomer: What is the width in cm for the Rowlinson Timber Cold Frame?\nCustomer Support: 102cm\nCustomer: Thanks.\nTLDR: A customer wants the dimensions of a Rowlinson Timber Cold Frame\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I assist you today?\nCustomer: The lid for the Halls Standard Cold Frame is very weak. What is it made of?\nCustomer Support: Polycarbonate.\nCustomer: It will only last a few months. How do I return it and get a refund, please?\nTLDR: The customer wants to return an item and get a refund as they think the material it is made of is very weak.\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I help you today?\nCustomer: What wood is the Rowlinson cold frame made out of?\nCustomer Support: Softwood.\nCustomer: That\'s too flimsy and won\'t last. I want to return it and get a refund. How do I do that?\nTLDR: A customer wants to return an item as they are not happy with the material it is made of.\n--\nSummarize this dialogue:\nCustomer: Hi\nCustomer Support: hi. How can I help you today?\nCustomer: What is the height at the back of the Halls Standard Cold Frame in inches?\nCustomer Support: 28cm\nCustomer: That\'s too short. I want to return it and get a refund. How do I do that?\nTLDR: A customer wants to return an item as it is too short for their needs.\n--\nSummarize this dialogue:\n'
@@ -89,7 +92,13 @@ class AIManager:
         '''
     def answer_message(self, msg: str, n_top: int = 3) -> list[str]:
         kb_df = self.query_using_semantic_search(msg)
-        gen = self.generate_using_dialog(msg)
+        #gen = self.generate_using_dialog(msg)
+        while True: # Need to do this as a workaround as it takes approx. 4s for gen to get a response.
+            gen = self.generate_using_conversant(msg)
+            #print(f'gen --> {gen}')
+            if gen:
+                break
+            time.sleep(2)
         result_df = kb_df.append(pd.DataFrame.from_dict({'question': [gen], "distance": [1]}), ignore_index=True)
         return result_df.sort_values("distance")
 
@@ -143,7 +152,11 @@ class AIManager:
                                                             2,
                                                             include_distances=True)
         return pd.DataFrame({'question': df.loc[similar_item_ids[0], 'question'],
-                            'distance': similar_item_ids[1]}) 
+                            'distance': similar_item_ids[1]})
+
+    def generate_using_conversant(self, dialog):
+        #bot = PromptChatbot.from_persona("customer_support_bot", co, '.')
+        return self.bot.reply(f'{dialog}')                        
 
     def generate_using_dialog(self, dialog):
         promt_text = f"""You are a customer support agent responding to a customer.

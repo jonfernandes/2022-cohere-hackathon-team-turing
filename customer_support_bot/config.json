@@ -27,8 +27,8 @@
                   "bot": "OK. Can you give me some more details please?"
               },
               {
-                  "user": "I got charged on my card but I don't think the order ever shipped",
-                  "bot": "I'm so sorry to hear that. Could you tell me the order number?"
+                  "user": "That's too short. I want to return it and get a refund.",
+                  "bot": "I'm so sorry to hear that. Please can you send me the address details and I'll sort out the return and refund for you."
               },
               {
                   "user": "yeah it's 1234354",
@@ -40,7 +40,7 @@
               },
               {
                   "user": "nah all looks good now!",
-                  "bot": "Thank you for your time today and for checking in with us!"
+                  "bot": "Thank you for your time today and for getting in touch with us! Bye!"
               }
           ]
       ]

@@ -29,6 +29,7 @@ def format_chat_log(chat_log):
     return summary_chat
 
 def create_logs(outp, call_duration):
+    global call_log
     chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
     output_filename = f'{datetime.datetime.today():%Y-%m-%d %H%M}.md'
     minutes, seconds = divmod(call_duration, 60)
@@ -51,6 +52,7 @@ def create_logs(outp, call_duration):
         for line in call_log:
             line = line + '<br>'
             file.write(line)
+        call_log = [] #This is to ensure only the latest log is kept.
 
 app = FastAPI()
 

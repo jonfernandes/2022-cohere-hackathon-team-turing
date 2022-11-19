@@ -5,3 +5,4 @@ cohere_demo/
 get-pip.py
 COHERE_API_KEY.json
 ChatApp/call_logs/*.txt
+ChatApp/call_logs/*.md
