@@ -6,3 +6,7 @@ get-pip.py
 COHERE_API_KEY.json
 ChatApp/call_logs/*.txt
 ChatApp/call_logs/*.md
+ChatApp/call_logs/*.pdf
+ChatApp/call_logs/*.log
+ChatApp/mdpdf.log
+mdpdf.log

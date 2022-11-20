@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 import itertools
 from pathlib import Path
 import time
+import subprocess
 
 from .ai_manager import AIManager
 from .ai_manager import API_KEY
@@ -31,7 +32,9 @@ def format_chat_log(chat_log):
 def create_logs(outp, call_duration):
     global call_log
     chat_time = f'{datetime.datetime.today():%Y-%m-%d %H:%M}'
-    output_filename = f'{datetime.datetime.today():%Y-%m-%d %H%M}.md'
+    output_filename = f'{datetime.datetime.today():%Y-%m-%d_%H%M}'
+    output_filename_md = f'{output_filename}.md'
+    output_filename_pdf = f'{output_filename}.pdf'
     minutes, seconds = divmod(call_duration, 60)
     positive_confidence = round(outp[0].labels['positive'].confidence, 2)
     negative_confidence = round(outp[0].labels['negative'].confidence, 2)
@@ -39,7 +42,9 @@ def create_logs(outp, call_duration):
     prediction = outp[0].prediction
     prediction_confidence = round(outp[0].confidence, 2)
     chat_summary = ai_manager.generate_summary(format_chat_log(call_log))
-    with open(Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename}', 'wt') as file:
+    output_filepath_md = Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename_md}'
+    output_filepath_pdf = Path().cwd()/'ChatApp'/'call_logs'/f'{output_filename_pdf}'
+    with open(output_filepath_md, 'wt') as file:
         file.write(f'# Chat log ({chat_time})\n')
         file.write(f'### Support call worker ID: Jack Daws\n')
         file.write(f'### Customer ID: 1542\n')
@@ -50,9 +55,10 @@ def create_logs(outp, call_duration):
         file.write(f'---\n')
         file.write(f'### Customer chat log: \n')
         for line in call_log:
-            line = line + '<br>'
+            line = line + '  \n'
             file.write(line)
         call_log = [] #This is to ensure only the latest log is kept.
+    subprocess.call(f"mdpdf -o {output_filepath_pdf} {output_filepath_md}", shell=True)
 
 app = FastAPI()
 
