@@ -22,3 +22,6 @@
     - The chat sentiment [positive|negative|neutral] with associated confidence score. (This is determined using sentiment analysis and co:here Classify) 
     - The chat summary (This is created using co:here Generate)
     - A full log of the chat for auditing purposes.
+
+## Additional resources
+- [Solution overview and demo](https://youtu.be/K3FhLOUtdWQ)
